@@ -30,6 +30,22 @@ class RedactingFormatter(logging.Formatter):
         return message
 
 
+def get_logger() -> logging.Logger:
+    """
+    Create and configure a logger for handling user data with
+    obfuscated PII.
+
+    Returns:
+    - logging.Logger: Configured logger named "user_data" with a
+    StreamHandler and RedactingFormatter.
+    """
+    logging.getLogger('user_data').setLevel(logging.INFO)
+    logging.getLogger('user_data').propagate = False
+    logging.getLogger('user_data').addHandler(logging.StreamHandler())
+    logging.StreamHandler().setFormatter(RedactingFormatter(PII_FIELDS))
+    return logging.getLogger('user_data')
+
+
 def filter_datum(fields: List[str], redaction: str,
                  message: str, separator: str) -> str:
     """
