@@ -75,10 +75,33 @@ def get_db() -> mysql.connector.connection.MySQLConnection:
     - mysql.connector.connection.MySQLConnection:
     Database connection object.
     """
-    username = os.getenv("PERSONAL_DATA_DB_USERNAME", "root")
-    password = os.getenv("PERSONAL_DATA_DB_PASSWORD", "")
-    host = os.getenv("PERSONAL_DATA_DB_HOST", "localhost")
+    db_username = os.getenv("PERSONAL_DATA_DB_USERNAME", "root")
+    db_password = os.getenv("PERSONAL_DATA_DB_PASSWORD", "")
+    db_host = os.getenv("PERSONAL_DATA_DB_HOST", "localhost")
     db_name = os.getenv("PERSONAL_DATA_DB_NAME")
-    cnx = mysql.connector.connection.MySQLConnection(
-        user=username, password=password, host=host, database=db_name)
-    return cnx
+    connection = mysql.connector.connection.MySQLConnection(
+        user=db_username, password=db_password, host=db_host, database=db_name)
+    return connection
+
+
+def main():
+    """
+    Retrieve all rows from the users table and display each row
+    under a filtered format.
+
+    Filtered fields:
+    - name
+    - email
+    - phone
+    - ssn
+    - password
+    """
+    connection = get_db()
+    connection.cursor().execute("SELECT * FROM users;")
+    fields = [i[0] for i in connection.cursor().description]
+
+    for row in connection.cursor():
+        row_ = ''.join(f'{f}={str(r)}; ' for r, f in zip(row, fields))
+        get_logger().info(row_.strip())
+    connection.cursor().close()
+    connection.close()
