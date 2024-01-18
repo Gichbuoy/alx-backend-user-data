@@ -9,6 +9,9 @@ from flask_cors import (CORS, cross_origin)
 import os
 from api.v1.auth.auth import Auth
 from api.v1.auth.basic_auth import BasicAuth
+from api.v1.auth.session_auth import SessionAuth
+from api.v1.auth.session_db_auth import SessionDBAuth
+from api.v1.auth.session_exp_auth import SessionExpAuth
 
 
 app = Flask(__name__)
@@ -45,21 +48,25 @@ def forbidden(error) -> str:
 
 @app.before_request
 def authenticate_user():
-    """Authenticates a user before processing a request.
+    """
+    function that Authenticates a user before processing a request.
     """
     if auth:
         excluded_paths = [
             '/api/v1/status/',
             '/api/v1/unauthorized/',
             '/api/v1/forbidden/',
+            '/api/v1/auth_session/login/',
         ]
         if auth.require_auth(request.path, excluded_paths):
             auth_header = auth.authorization_header(request)
+            sess_cookie = auth.session_cookie(request)
             user = auth.current_user(request)
-            if auth_header is None:
+            if auth_header is None and auth.session_cookie(request) is None:
                 abort(401)
-            if user is None:
+            if request.current_user is None:
                 abort(403)
+            request.current_user = auth.current_user(request)
 
 
 if __name__ == "__main__":
