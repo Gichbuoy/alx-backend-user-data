@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+New session auth
 """
 
 from flask import Flask, request, jsonify
@@ -7,6 +8,18 @@ from api.v1.app import auth
 from models.user import User
 
 app = Flask(__name__)
+
+
+@app.route('/api/v1/auth_session/logout', methods=['DELETE'])
+def auth_session_logout():
+    """
+    Use auth.destroy_session(request) to delete the Session ID
+    from the request's cookie
+    """
+    if not auth.destroy_session(request):
+        abort(404)
+
+    return jsonify({}), 200
 
 
 @app.route('/api/v1/auth_session/login', methods=['POST'])
