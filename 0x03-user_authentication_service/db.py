@@ -55,7 +55,18 @@ class DB:
         return user
 
     def find_user_by(self, **kwargs) -> User:
-        """Finds a user based on a set of filters.
+        """
+        Find a user in the database based on the provided keyword arguments.
+
+        Args:
+            **kwargs: Arbitrary keyword arguments representing the filters.
+
+        Returns:
+            User: The User object found in the database.
+
+        Raises:
+            NoResultFound: If no results are found.
+            InvalidRequestError: If wrong query arguments are passed.
         """
         fields, values = [], []
         for key, value in kwargs.items():
@@ -73,7 +84,19 @@ class DB:
 
     def update_user(self, user_id: int, **kwargs) -> None:
         """
-        Updates a user based on a given id.
+        Update a user in the database based on the provided
+        user_id and keyword arguments.
+
+        Args:
+            user_id (int): The ID of the user to update.
+            **kwargs: Arbitrary keyword arguments representing the updates.
+
+        Raises:
+            NoResultFound: If no user is found with the specified user_id.
+            InvalidRequestError: If there is an issue with the database
+            query.
+            ValueError: If an invalid argument is passed that does not
+            correspond to a user attribute.
         """
         user = self.find_user_by(id=user_id)
         if user is None:
