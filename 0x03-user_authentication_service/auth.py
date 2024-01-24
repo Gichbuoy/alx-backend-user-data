@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Authentication module
+User authentication module
 """
 
 import bcrypt
@@ -23,14 +23,24 @@ def _hash_password(password: str) -> str:
 
 
 class Auth:
-    """Auth class to interact with the authentication database.
+    """
+    Auth class to interact with the authentication database.
     """
 
     def __init__(self):
         self._db = DB()
 
     def register_user(self, email: str, password: str) -> User:
-        """Register a new user"""
+        """
+        Register a new user.
+
+        Args:
+            email (str): The email of the user.
+            password (str): The password of the user.
+
+        Returns:
+            User: The User object representing the registered user.
+        """
         try:
             user = self._db.find_user_by(email=email)
         except Exception:
