@@ -42,7 +42,16 @@ def register_users():
 
 @app.route('/sessions', methods=['POST'], strict_slashes=False)
 def login():
-    """Login user"""
+    """
+    Validate user login credentials.
+
+    Args:
+        email (str): The email of the user.
+        password (str): The password entered by the user.
+
+    Returns:
+        bool: True if login is valid, False otherwise.
+    """
     email, password = request.form.get('email'), request.form.get('password')
     if AUTH.valid_login(email, password):
         response = jsonify({"email": email, "message": "logged in"})
