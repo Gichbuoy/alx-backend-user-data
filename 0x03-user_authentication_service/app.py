@@ -3,7 +3,6 @@
 
 from flask import Flask, abort, jsonify, redirect, request
 from auth import Auth
-import uuid
 
 app = Flask(__name__)
 AUTH = Auth()
