@@ -51,7 +51,16 @@ class Auth:
         return self._db.add_user(email, hashed_password)
 
     def valid_login(self, email: str, password: str) -> bool:
-        """Check if the user's credentials are valid"""
+        """
+        Validate user login credentials.
+
+        Args:
+            email (str): The email of the user.
+            password (str): The password entered by the user.
+
+        Returns:
+            bool: True if login is valid, False otherwise.
+        """
         try:
             user = self._db.find_user_by(email=email)
         except Exception:
@@ -59,6 +68,12 @@ class Auth:
         return bcrypt.checkpw(password.encode('utf-8'), user.hashed_password)
 
     def _generate_uuid(self) -> str:
+        """
+        Generate a new UUID and return its string representation.
+
+        Returns:
+            str: String representation of the new UUID.
+        """
         return str(uuid.uuid4())
 
     def create_session(self, email: str) -> str:
