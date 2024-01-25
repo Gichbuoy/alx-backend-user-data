@@ -62,7 +62,20 @@ def login():
 
 @app.route('/sessions', methods=['DELETE'], strict_slashes=False)
 def logout():
-    """Log out user"""
+    """
+    Logout route: Handles the DELETE /sessions route.
+
+    The request is expected to contain the session ID as a cookie
+    with key "session_id".
+
+    Find the user with the requested session ID. If the user exists,
+    destroy the session and redirect
+    the user to GET /. If the user does not exist, respond with a 403
+    HTTP status.
+
+    Returns:
+    - Response: A redirect response or a 403 HTTP status.
+    """
     session_id = request.cookies.get("session_id")
     user = AUTH.get_user_from_session_id(session_id)
     if user is not None:
@@ -73,7 +86,22 @@ def logout():
 
 @app.route('/profile', methods=['GET'], strict_slashes=False)
 def profile():
-    """Get user profile"""
+    """
+    Profile route: Handles the GET /profile route.
+
+    The request is expected to contain a session_id cookie.
+    Use it to find the user.
+    If the user exists, respond with a 200 HTTP status and the
+    following JSON payload:
+    {
+        "user_id": <user_id>,
+        "email": "<user_email>"
+    }
+    If the user does not exist, respond with a 403 HTTP status.
+
+    Returns:
+    - Response: A JSON response with user information or a 403 HTTP status.
+    """
     session_id = request.cookies.get("session_id")
     user = AUTH.get_user_from_session_id(session_id)
     if user is not None:
