@@ -111,7 +111,21 @@ def profile():
 
 @app.route('/reset_password ', methods=['POST'], strict_slashes=False)
 def get_reset_password_token():
-    """Get password reset token"""
+    """
+    Reset Password route: Handles the POST /reset_password route.
+
+    The request is expected to contain form data with the "email" field.
+
+    If the email is not registered, respond with a 403 status code.
+    Otherwise, generate a token and respond with a 200 HTTP status and
+    the following JSON payload:
+    {
+        "reset_token": "<generated_reset_token>"
+    }
+
+    Returns:
+    - Response: A JSON response with the reset token or a 403 HTTP status.
+    """
     try:
         email = request.form.get("email")
         reset_token = AUTH.get_reset_password_token(email)
@@ -123,7 +137,25 @@ def get_reset_password_token():
 
 @app.route('/reset_password ', methods=['PUT'], strict_slashes=False)
 def update_password():
-    """Update password"""
+    """
+    Update Password route: Handles the PUT /reset_password route.
+
+    The request is expected to contain form data with fields "email",
+    "reset_token", and "new_password".
+
+    Update the password. If the token is invalid, catch the exception
+    and respond with a 403 HTTP code.
+    If the token is valid, respond with a 200 HTTP code and the
+    following JSON payload:
+    {
+        "email": "<user_email>",
+        "message": "Password updated"
+    }
+
+    Returns:
+    - Response: A JSON response with the user email and a message or a
+    403 HTTP status.
+    """
     email = request.form.get("email")
     reset_token = request.form.get("reset_token")
     new_password = request.form.get("new_password")

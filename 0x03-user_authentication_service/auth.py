@@ -127,7 +127,16 @@ class Auth:
         return None
 
     def get_reset_password_token(self, email: str) -> str:
-        """Generate a password reset token"""
+        """
+        Generates a reset password token for the user with the
+        specified email.
+
+        Parameters:
+        - email: A string representing the user's email.
+
+        Returns:
+        - str: The generated reset password token.
+        """
         try:
             user = self._db.find_user_by(email=email)
         except UserNotFoundError:
@@ -137,7 +146,16 @@ class Auth:
         return reset_token
 
     def update_password(self, reset_token: str, password: str) -> None:
-        """Update the user's password if reset tooken is available in db"""
+        """
+        Updates the user's password using the provided reset password token.
+
+        Parameters:
+        - reset_token: A string representing the reset password token.
+        - password: A string representing the new password.
+
+        Returns:
+        - None
+        """
         user = None
         try:
             user = self._db.find_user_by(reset_token=reset_token)
