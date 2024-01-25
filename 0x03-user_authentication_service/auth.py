@@ -96,7 +96,15 @@ class Auth:
         return session_id
 
     def get_user_from_session_id(self, session_id: str) -> User:
-        """Get user based on their session ID"""
+        """
+        Retrieves the user corresponding to the provided session ID.
+
+        Parameters:
+        - session_id: A string representing the session ID.
+
+        Returns:
+        - Optional[User]: The corresponding User if found, else None.
+        """
         if session_id:
             try:
                 user = self._db.find_user_by(session_id=session_id)
